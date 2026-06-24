@@ -635,7 +635,7 @@ function vastaaTekstiJaSeuraava() {
 }
 
 // ============================================================
-// LOPPUNÄKYMÄ
+// LOPPUNÄKYMÄ & LÄHETYS GOOGLE SHEETSIIN
 // ============================================================
 function naytaLoppu() {
   const avain =
@@ -644,6 +644,33 @@ function naytaLoppu() {
       : nykyinenKieli + "_" + nykyinenVersio;
   const data = kysymykset[avain];
 
+  // ===== LÄHETÄÄN VASTAUKSET GOOGLE SHEETSIIN =====
+  const lahetettavaData = {
+    versio: nykyinenVersio,
+    kieli: nykyinenKieli,
+    ...vastaukset, // Tässä on kaikki kysymys_0 ... kysymys_N
+  };
+
+  // ⚠️ MUISTA KORVATA TÄMÄ OMASTA URL-OSOITTEELLASI ⚠️
+  const scriptURL =
+    "https://script.google.com/macros/s/AKfycbzEfDkPtBmFep5IyHPo6srrzp-BHGbRTfUDdcKFnaA-72q_4aur_ksCTJvUUi-QMb5L/exec";
+
+  fetch(scriptURL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(lahetettavaData),
+  })
+    .then(() => {
+      console.log("Vastaukset lähetetty onnistuneesti");
+    })
+    .catch((error) => {
+      console.error("Virhe lähetyksessä:", error);
+    });
+
+  // ===== NÄYTÄ LOPPUNÄKYMÄ =====
   console.log("=== KAIKKI VASTAUKSET ===");
   console.log("Versio:", nykyinenVersio);
   console.log("Kieli:", nykyinenKieli);
