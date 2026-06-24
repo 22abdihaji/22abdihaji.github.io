@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"
+    />
+    <title>Fiilismittari / Mood Meter</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ============================================================
+         PÄÄNÄKYMÄ: KIELI- JA VERSIOVALINTA
+         ============================================================ -->
+    <div id="kielivalinta" class="naytto">
+      <!-- Logo ylhäällä -->
+      <img
+        src="logos.png"
+        alt="AIMlearning-hanke"
+        style="max-width: 180px; height: auto; margin-bottom: 1.2rem"
+      />
+
+      <h1>👋 Tervetuloa / Welcome</h1>
+      <p>Valitse kieli / Choose language</p>
+
+      <button class="kieli-nappi" data-kieli="fi">Suomi</button>
+      <button class="kieli-nappi" data-kieli="en">English</button>
+
+      <!-- ============================================================
+             VERSIOVALINTA (AMK, työtön, yritys)
+             ============================================================ -->
+      <div
+        id="versiovalinta"
+        style="
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 2px solid #e8eff6;
+        "
+      >
+        <p style="font-size: 1.2rem; color: #4a5e7a; margin-bottom: 0.8rem">
+          Valitse kyselyn tyyppi / Select survey type
+        </p>
+        <button
+          class="versio-nappi"
+          data-versio="perus"
+          style="background: #1a3a6b"
+        >
+          📊 Perus / Basic
+        </button>
+        <button
+          class="versio-nappi"
+          data-versio="amk"
+          style="background: #1a7a3a"
+        >
+          🎓 AMK / Student
+        </button>
+        <button
+          class="versio-nappi"
+          data-versio="tyoton"
+          style="background: #b85a1a"
+        >
+          🔍 Työtön / Unemployed
+        </button>
+        <button
+          class="versio-nappi"
+          data-versio="yritys"
+          style="background: #6a4a8a"
+        >
+          🏢 Yritys / Business
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         KYSYMYSNÄKYMÄ (JavaScript luo sisällön)
+         ============================================================ -->
+    <div id="kysely" class="naytto" style="display: none">
+      <div id="kysymys-sisalto"></div>
+    </div>
+
+    <!-- ============================================================
+         LOPPUNÄKYMÄ (LOGOT ALAREUNASSA)
+         ============================================================ -->
+    <div id="loppu" class="naytto" style="display: none">
+      <h1>Kiitos! / Thank you!</h1>
+      <p id="lopputeksti"></p>
+
+      <!-- LOGOT JA ORGANISAATIOTIEDOT -->
+      <div id="logot">
+        <img src="logos.png" alt="AIMlearning-hankkeen ja kumppaneiden logot" />
+        <p id="rahoitusteksti">
+          Tämä kysely on toteutettu Euroopan unionin osarahoittamassa
+          AIMlearning-hankkeessa.<br />
+          This survey has been implemented in the EU co-funded AIMlearning
+          project.
+        </p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
