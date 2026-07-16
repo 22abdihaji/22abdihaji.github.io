@@ -184,16 +184,26 @@ textarea:focus {
 }
 
 #logot img {
-  max-width: 240px;
+  max-width: 300px;
   height: auto;
   margin-bottom: 0.6rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background: white;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0, 0.08);
 }
 
 #logot #rahoitusteksti {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: #4a5e7a;
   line-height: 1.6;
   margin: 0.5rem 0 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ============================================================
