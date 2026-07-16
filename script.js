@@ -454,6 +454,65 @@ const loppu = document.getElementById("loppu");
 const kysymysSisalto = document.getElementById("kysymys-sisalto");
 
 // ============================================================
+// ALKUUN-PALAA
+// ============================================================
+function palaaAlkuun() {
+  // Nollataan kaikki
+  nykyinenKysymysIndeksi = 0;
+  vastaukset = {};
+
+  // Piilotetaan kysely- ja loppunäkymät
+  kysely.style.display = "none";
+  loppu.style.display = "none";
+
+  // Näytetään alkuvalikko
+  kielivalinta.style.display = "block";
+
+  // Palautetaan oletusvalinnat (Suomi ja Perus)
+  asetaOletusvalinnat();
+}
+
+// ============================================================
+// OLETUSVALINTOJEN ASETTAMINEN
+// ============================================================
+function asetaOletusvalinnat() {
+  // Valitaan "Suomi" oletuksena
+  const suomiNappi = document.querySelector('.kieli-nappi[data-kieli="fi"]');
+  if (suomiNappi) {
+    suomiNappi.style.background = "#1a3a6b";
+    suomiNappi.style.color = "white";
+    suomiNappi.style.border = "3px solid #1a3a6b";
+  }
+  // Nollataan englanti
+  const enNappi = document.querySelector('.kieli-nappi[data-kieli="en"]');
+  if (enNappi) {
+    enNappi.style.background = "white";
+    enNappi.style.color = "#1a3a6b";
+    enNappi.style.border = "3px solid #1a3a6b";
+  }
+
+  // Valitaan "Perus" oletuksena
+  const perusNappi = document.querySelector(
+    '.versio-nappi[data-versio="perus"]'
+  );
+  if (perusNappi) {
+    perusNappi.style.border = "3px solid white";
+    perusNappi.style.transform = "scale(1.05)";
+    perusNappi.style.boxShadow = "0 4px 16px rgba(0,0,0,0.3)";
+    perusNappi.style.opacity = "1";
+  }
+  // Nollataan muut versiot
+  document
+    .querySelectorAll('.versio-nappi:not([data-versio="perus"])')
+    .forEach((n) => {
+      n.style.border = "3px solid transparent";
+      n.style.transform = "scale(1)";
+      n.style.boxShadow = "none";
+      n.style.opacity = "0.7";
+    });
+}
+
+// ============================================================
 // VERSIOVALINTA
 // ============================================================
 document.addEventListener("DOMContentLoaded", function () {
@@ -480,6 +539,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  // Asetetaan oletusvalinnat
+  asetaOletusvalinnat();
 });
 
 // ============================================================
@@ -571,8 +633,12 @@ function naytaKysymys() {
               k.placeholder || "Kirjoita tähän..."
             }" style="width: 100%; padding: 18px; font-size: 1.6rem; border-radius: 24px; border: 2px solid #dce6f0;"></textarea>
             <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
-                <button onclick="naytaEdellinen()" style="background: #6a7a8a; padding: 14px 28px; font-size: 1.4rem; min-width: 120px;">← Edellinen</button>
-                <button onclick="vastaaTekstiJaSeuraava()" class="ensisijainen" style="padding: 14px 28px; font-size: 1.4rem; min-width: 120px;">Seuraava →</button>
+                <button onclick="naytaEdellinen()" style="background: #6a7a8a; padding: 14px 28px; font-size: 1.4rem; min-width: 120px;">${
+                  nykyinenKieli === "fi" ? "← Edellinen" : "← Previous"
+                }</button>
+                <button onclick="vastaaTekstiJaSeuraava()" class="ensisijainen" style="padding: 14px 28px; font-size: 1.4rem; min-width: 120px;">${
+                  nykyinenKieli === "fi" ? "Seuraava →" : "Next →"
+                }</button>
             </div>
         `;
   }
@@ -581,10 +647,23 @@ function naytaKysymys() {
   if (k.tyyppi === "hymio" || k.tyyppi === "asteikko") {
     html += `
             <div style="display: flex; justify-content: center; margin-top: 1.5rem;">
-                <button onclick="naytaEdellinen()" style="background: #6a7a8a; padding: 14px 28px; font-size: 1.4rem; min-width: 120px;">← Edellinen</button>
+                <button onclick="naytaEdellinen()" style="background: #6a7a8a; padding: 14px 28px; font-size: 1.4rem; min-width: 120px;">${
+                  nykyinenKieli === "fi" ? "← Edellinen" : "← Previous"
+                }</button>
             </div>
         `;
   }
+
+  // LISÄTÄÄN "ALKUUN"-PAINIKE KAIKKIIN KYSYMYKSIIN!
+  html += `
+        <div style="display: flex; justify-content: center; margin-top: 1.5rem; padding-top: 0.5rem; border-top: 1px solid #e8eff6;">
+            <button onclick="palaaAlkuun()" style="background: transparent; color: #6a7a8a; border: none; padding: 10px 20px; font-size: 1rem; cursor: pointer; text-decoration: underline; box-shadow: none; min-width: auto;">
+                ${
+                  nykyinenKieli === "fi" ? "⬅ Alkuvalikkoon" : "⬅ Back to start"
+                }
+            </button>
+        </div>
+    `;
 
   html += `</div>`;
   kysymysSisalto.innerHTML = html;
@@ -648,10 +727,9 @@ function naytaLoppu() {
   const lahetettavaData = {
     versio: nykyinenVersio,
     kieli: nykyinenKieli,
-    ...vastaukset, // Tässä on kaikki kysymys_0 ... kysymys_N
+    ...vastaukset,
   };
 
-  // ⚠️ MUISTA KORVATA TÄMÄ OMASTA URL-OSOITTEELLASI ⚠️
   const scriptURL =
     "https://script.google.com/macros/s/AKfycbzEfDkPtBmFep5IyHPo6srrzp-BHGbRTfUDdcKFnaA-72q_4aur_ksCTJvUUi-QMb5L/exec";
 
@@ -682,10 +760,23 @@ function naytaLoppu() {
   kysely.style.display = "none";
   loppu.style.display = "block";
   document.getElementById("lopputeksti").innerHTML = `
-        <p style="font-size: 2.2rem; font-weight: 600; color: #0a1e3c;">Kiitos palautteestasi! / Thank you for your feedback!</p>
-        <p style="font-size: 1.6rem; color: #4a5e7a; margin-top: 0.5rem;">Vastauksesi on tallennettu anonyymisti. / Your response has been recorded anonymously.</p>
-        <p style="font-size: 1.2rem; color: #4a5e7a; margin-top: 1rem;">Vastasit ${
-          Object.keys(vastaukset).length
-        } kysymykseen.</p>
+        <p style="font-size: 2.2rem; font-weight: 600; color: #0a1e3c;">${
+          nykyinenKieli === "fi"
+            ? "Kiitos palautteestasi!"
+            : "Thank you for your feedback!"
+        }</p>
+        <p style="font-size: 1.6rem; color: #4a5e7a; margin-top: 0.5rem;">${
+          nykyinenKieli === "fi"
+            ? "Vastauksesi on tallennettu anonyymisti."
+            : "Your response has been recorded anonymously."
+        }</p>
+        <p style="font-size: 1.2rem; color: #4a5e7a; margin-top: 1rem;">${
+          nykyinenKieli === "fi"
+            ? "Vastasit " + Object.keys(vastaukset).length + " kysymykseen."
+            : "You answered " + Object.keys(vastaukset).length + " questions."
+        }</p>
+        <button onclick="palaaAlkuun()" style="margin-top: 2rem; background: #6a7a8a; padding: 14px 28px; font-size: 1.4rem; min-width: 120px; border-radius: 60px; border: none; color: white; cursor: pointer;">
+          ${nykyinenKieli === "fi" ? "⬅ Alkuun" : "⬅ Home"}
+        </button>
     `;
 }
